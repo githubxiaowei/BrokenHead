@@ -87,6 +87,11 @@ class Ui_MainWindow(object):
         self.horizontalLayout.setStretch(1, 1)
         self.verticalLayout_2.addLayout(self.horizontalLayout)
         self.textBrowser = QtWidgets.QTextEdit(self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        font.setBold(True)
+        font.setWeight(75)
+        self.textBrowser.setFont(font)
         self.textBrowser.setObjectName("textBrowser")
         self.verticalLayout_2.addWidget(self.textBrowser)
         self.verticalLayout_2.setStretch(0, 3)
@@ -120,7 +125,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "BrokenHead"))
         __sortingEnabled = self.List.isSortingEnabled()
         self.List.setSortingEnabled(False)
         item = self.List.item(0)
@@ -162,5 +167,6 @@ class Ui_MainWindow(object):
 "</style></head><body style=\" font-family:\'SimSun\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.menu.setTitle(_translate("MainWindow", "菜单"))
-        self.actionopen.setText(_translate("MainWindow", "open"))
+        self.actionopen.setText(_translate("MainWindow", "打开文件夹"))
+        self.actionopen.setIconText(_translate("MainWindow", "open"))
 

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>BrokenHead</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -151,7 +151,15 @@
          </layout>
         </item>
         <item>
-         <widget class="QTextEdit" name="textBrowser"/>
+         <widget class="QTextEdit" name="textBrowser">
+          <property name="font">
+           <font>
+            <pointsize>15</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -191,6 +199,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionopen">
    <property name="text">
+    <string>打开文件夹</string>
+   </property>
+   <property name="iconText">
     <string>open</string>
    </property>
   </action>

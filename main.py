@@ -1,21 +1,13 @@
 # -*- coding: UTF-8 -*-
 import sys
 from mainUI import Ui_MainWindow
-import os
-from matplotlib import pylab as plt
-import nibabel as nib
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from PyQt5.QtWidgets import *
 import math
 from PyQt5.QtCore import Qt, QEvent
 from vtk.qt.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
-
-import vtk
-import tkinter as tk
-from tkinter import filedialog
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QImage, QPixmap
-import cv2
 from utils import *
 
 from PyQt5.QtWidgets import  QGraphicsScene, QGraphicsPixmapItem, QGraphicsView
@@ -83,9 +75,7 @@ class mywindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def table(self):
 
-        root = tk.Tk()
-        root.withdraw()
-        self.dirPath = filedialog.askdirectory()
+        self.dirPath = QFileDialog.getExistingDirectory(self)
 
         if len(self.dirPath) > 0:
             print('selected: ', self.dirPath)
@@ -141,7 +131,6 @@ class mywindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.view2d.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
     def show3d(self):
-
         bone_reader = vtk.vtkMetaImageReader()
         bone_reader.SetFileName(nii2mhd(self.current_image_path,save_file="temp/bone.mhd"))
         self.boneActor = genActor(bone_reader, 500, "Ivory")
@@ -242,7 +231,7 @@ class mywindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.textBrowser.setStyleSheet('''background-color:rgb(255, 255, 255);  color:rgb(0,0,0);''')
         self.setStyleSheet('''background-color:rgb(207, 207, 207);border-radius: 5px;  color:rgb(0,0,0);''')
 
-
+        self.setWindowIcon(QtGui.QIcon('./resource/kulou.jpg'))
 
 class MyView(QGraphicsView):
     def __init__(self, parent):
@@ -260,7 +249,6 @@ class MyView(QGraphicsView):
                 x, y = event.x(), event.y()
                 c_x, c_y = self.size().width()//2, self.size().height()//2
                 print(c_x, c_y)
-                # c_x, c_y = c_x + (s-1)*(x-c_x), c_y + (s-1)*(y-c_y)
                 self.scale(s,s)
 
             elif self.window.current_data is not None:
@@ -271,8 +259,8 @@ class MyView(QGraphicsView):
 
     def mousePressEvent(self,e):
         if(e.buttons()==QtCore.Qt.RightButton):
-            self.window.showLabel = not self.window.showLabel
             if self.window.hasLabel==True:
+                self.window.showLabel = not self.window.showLabel
                 self.window.current_merge = merge(self.window.current_clip, self.window.current_label)
                 self.window.show2d()
                 self.window.show3d_label()

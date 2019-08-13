@@ -9,6 +9,7 @@ from vtk.qt.QVTKRenderWindowInteractor import QVTKRenderWindowInteractor
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import QImage, QPixmap
 from utils import *
+from PyQt5.QtWidgets import QMessageBox
 
 from PyQt5.QtWidgets import  QGraphicsScene, QGraphicsPixmapItem, QGraphicsView
 
@@ -16,8 +17,8 @@ class mywindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super(mywindow, self).__init__()
         self.setupUi(self)
-        self.init_ui()
         self.init_var()
+        self.init_ui()
 
     def init_var(self):
         self.dirPath = ''
@@ -36,6 +37,12 @@ class mywindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.boneActor = None
         self.labelActor = None
         self.outlineActor = None
+
+        self.HU2dmin = 0
+        self.HU2dmax = 1000
+        self.HU3d = 500
+        self.HUMIN = -3000
+        self.HUMAX = 3000
 
     def message(self,item):
 
@@ -56,7 +63,7 @@ class mywindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.current_image = np.transpose(nib.load(self.current_image_path).dataobj,(2,0,1))
                 if self.hasLabel:
                     self.current_label = np.transpose(nib.load(self.current_label_path).dataobj, (2, 0, 1))
-                self.current_clip = clip(self.current_image)
+                self.current_clip = clip(self.current_image, self.HU2dmin, self.HU2dmax)
                 self.current_data = self.current_clip
                 self.show2d()
                 self.clear3d()
@@ -75,7 +82,7 @@ class mywindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if self.hasLabel:
             self.textBrowser.setText("骨窗示：顶骨见多发线状低密度影，骨皮质不连续，可见断端向内移位，余颅骨骨质密度正常，未见明确骨折线影。")
         else:
-            self.textBrowser.setText("老铁，没毛病！")
+            self.textBrowser.setText("颅骨骨质密度正常，未见明确骨折线影。 ")
 
 
     def table(self):
@@ -139,7 +146,7 @@ class mywindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def show3d(self):
         bone_reader = vtk.vtkMetaImageReader()
         bone_reader.SetFileName(nii2mhd(self.current_image_path,save_file="temp/bone.mhd"))
-        self.boneActor = genActor(bone_reader, 500, "Ivory")
+        self.boneActor = genActor(bone_reader, self.HU3d, "Ivory")
 
         if self.hasLabel:
             label_reader = vtk.vtkMetaImageReader()
@@ -217,10 +224,39 @@ class mywindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.view2d.setObjectName("view2d")
         self.horizontalLayout.addWidget(self.view2d)
 
+    def help(self):
+        # QMessageBox.about(self, "使用说明",  QtGui.QIcon('resource/help.jpg'))
+
+        vbox = QVBoxLayout()
+        msgBox = QDialog()
+        msgBox.setWindowIcon(QtGui.QIcon('resource/logo.jpg'))
+        msgBox.setWindowTitle("说明")
+        label = QLabel(self)
+        pix = QPixmap('resource/help.jpg')
+        label.setPixmap(pix)
+        vbox.addWidget(label)
+        msgBox.setLayout(vbox)
+        msgBox.setWindowModality(Qt.ApplicationModal)
+        msgBox.exec_()
+
+    def changeSlider1(self, value):
+        self.HU2dmin = value
+        if self.current_clip is not None:
+            self.current_clip = clip(self.current_image, self.HU2dmin, self.HU2dmax)
+            self.show2d()
+
+    def changeSlider2(self, value):
+        self.HU2dmax = value
+        if self.current_clip is not None:
+            self.current_clip = clip(self.current_image, self.HU2dmin, self.HU2dmax)
+            self.show2d()
+
     def init_ui(self):
         # self.pushButton_open.clicked.connect(self.choosePhoto)
         # self.pushButton_detect.clicked.connect(self.show_label)
+        # self.QtWeiget.showMaximized()
         self.actionopen.triggered.connect( self.table)
+        self.actionhelp.triggered.connect(self.help)
         self.List.itemClicked.connect(self.message)  # 点击文件名触发显示NII信息
         self.List.clear()
         self.init_2drender()
@@ -237,6 +273,18 @@ class mywindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.setWindowIcon(QtGui.QIcon('./resource/logo.jpg'))
 
+        self.Slider1.valueChanged[int].connect(self.changeSlider1)
+        self.Slider2.valueChanged[int].connect(self.changeSlider2)
+        self.Slider1.setMinimum(-3000)
+        self.Slider2.setMinimum(-3000)
+        self.Slider1.setMaximum(3000)
+        self.Slider2.setMaximum(3000)
+        self.Slider1.setValue(0)
+        self.Slider2.setValue(1000)
+
+        # screen = QDesktopWidget().screenGeometry()
+        # self.setGeometry(0, 0, screen.width(), screen.height())
+
 class MyView(QGraphicsView):
     def __init__(self, parent):
         super(MyView,self).__init__(parent)
@@ -252,7 +300,7 @@ class MyView(QGraphicsView):
                 s = math.pow(2.0, event.angleDelta().y() / 240.0)
                 x, y = event.x(), event.y()
                 c_x, c_y = self.size().width()//2, self.size().height()//2
-                print(c_x, c_y)
+                # print(c_x, c_y)
                 self.scale(s,s)
 
             elif self.window.current_data is not None:
@@ -272,5 +320,7 @@ class MyView(QGraphicsView):
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = mywindow()
-    MainWindow.show()
+    # MainWindow.show()
+    MainWindow.showMaximized()
+    # MainWindow.showFullScreen()
     sys.exit(app.exec_())

@@ -1,5 +1,7 @@
 # BrokenHead
 
+![img](./resource/logo.jpg)
+
 ## 打开方式
 
 ```py

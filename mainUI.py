@@ -125,7 +125,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "BrokenHead"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "SCOPE"))
         __sortingEnabled = self.List.isSortingEnabled()
         self.List.setSortingEnabled(False)
         item = self.List.item(0)

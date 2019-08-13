@@ -72,6 +72,11 @@ class mywindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 l.append(p)
         self.NIImessage.setText('\n'.join(l))
 
+        if self.hasLabel:
+            self.textBrowser.setText("骨窗示：顶骨见多发线状低密度影，骨皮质不连续，可见断端向内移位，余颅骨骨质密度正常，未见明确骨折线影。")
+        else:
+            self.textBrowser.setText("老铁，没毛病！")
+
 
     def table(self):
 
@@ -93,8 +98,9 @@ class mywindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 in range(len(test_sample))]
 
         _translate = QtCore.QCoreApplication.translate
-        for i in self.samples:
 
+        self.List.clear()
+        for i in self.samples:
             if len(i[1]) == 0:
                 item = QtWidgets.QListWidgetItem(QtGui.QIcon('resource/green.png'),
                                                  _translate("MainWindow", i[0].split(os.path.sep)[-2]))
@@ -211,8 +217,6 @@ class mywindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.view2d.setObjectName("view2d")
         self.horizontalLayout.addWidget(self.view2d)
 
-
-
     def init_ui(self):
         # self.pushButton_open.clicked.connect(self.choosePhoto)
         # self.pushButton_detect.clicked.connect(self.show_label)
@@ -231,7 +235,7 @@ class mywindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.textBrowser.setStyleSheet('''background-color:rgb(255, 255, 255);  color:rgb(0,0,0);''')
         self.setStyleSheet('''background-color:rgb(207, 207, 207);border-radius: 5px;  color:rgb(0,0,0);''')
 
-        self.setWindowIcon(QtGui.QIcon('./resource/kulou.jpg'))
+        self.setWindowIcon(QtGui.QIcon('./resource/logo.jpg'))
 
 class MyView(QGraphicsView):
     def __init__(self, parent):

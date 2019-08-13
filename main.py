@@ -75,8 +75,20 @@ class mywindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if self.hasLabel:
             self.textBrowser.setText("骨窗示：顶骨见多发线状低密度影，骨皮质不连续，可见断端向内移位，余颅骨骨质密度正常，未见明确骨折线影。")
         else:
-            self.textBrowser.setText("老铁，没毛病！")
+            self.textBrowser.setText("颅骨骨质密度正常，未见明确骨折线影。")
 
+
+    def help(self):
+        vbox = QVBoxLayout()  # 纵向布局
+        dialog = QDialog()
+        dialog.setWindowTitle(u"说明")
+        label = QLabel(self)
+        pix = QPixmap('resource/help.jpg')
+        label.setPixmap(pix)
+        vbox.addWidget(label)
+        dialog.setLayout(vbox)
+        dialog.setWindowModality(Qt.ApplicationModal)
+        dialog.exec_()
 
     def table(self):
 
@@ -220,7 +232,8 @@ class mywindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def init_ui(self):
         # self.pushButton_open.clicked.connect(self.choosePhoto)
         # self.pushButton_detect.clicked.connect(self.show_label)
-        self.actionopen.triggered.connect( self.table)
+        self.action_open.triggered.connect( self.table)
+        self.action_help.triggered.connect(self.help)
         self.List.itemClicked.connect(self.message)  # 点击文件名触发显示NII信息
         self.List.clear()
         self.init_2drender()

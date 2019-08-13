@@ -192,17 +192,29 @@ p, li { white-space: pre-wrap; }
      <string>菜单</string>
     </property>
     <addaction name="separator"/>
-    <addaction name="actionopen"/>
+    <addaction name="action_open"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>帮助</string>
+    </property>
+    <addaction name="action_help"/>
    </widget>
    <addaction name="menu"/>
+   <addaction name="menu_2"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionopen">
+  <action name="action_open">
    <property name="text">
     <string>打开文件夹</string>
    </property>
    <property name="iconText">
     <string>open</string>
+   </property>
+  </action>
+  <action name="action_help">
+   <property name="text">
+    <string>说明</string>
    </property>
   </action>
  </widget>
